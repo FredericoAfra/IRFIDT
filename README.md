@@ -17,7 +17,7 @@
 
 ---
 
-## 📋 Sumário
+## 📋 Summary
 
 - [Sobre o Projeto](#-sobre-o-projeto)
 - [Arquitetura do Sistema](#-arquitetura-do-sistema)
@@ -31,246 +31,97 @@
 
 ---
 
-## 📖 Sobre o Projeto
+## 📖 About the project
 
 A system developed to track and manage the movement of materials and products within an industry. Each item is identified by an **RFID tag**, read by **RC522** sensors connected to **ESP32** microcontrollers installed at strategic points in the factory (entrances, exits, sectors, warehouse, etc.).
 
 When a tag is read, the ESP32 sends the data to a **REST API** (FastAPI), which registers and updates the information in the database. A **web panel** consumes this same API to allow data management and the visualization of dashboards with movement analyses.
 
-### Como funciona na prática
+### How it works
 
 ```
-[Tag RFID no produto]
-        │
-        ▼
-[Sensor RC522 + ESP32]  ──→  [API FastAPI]  ──→  [Banco SQLite]
-    (ponto da fábrica)              │
+[RFID tag]
+    │
+    ▼
+[Sensor RC522 + ESP32]  ──→  [API FastAPI]  ──→  [SQLite Database]
+    (point in factory)              │
                                     ▼
-                            [Site de Administração]
-                         (dashboards + gerenciamento)
+                                [Web page]
+                         (dashboards + management)
 ```
 
-### ✨ Funcionalidades previstas
+### ✨ Preview Features
 
-- [x] API REST para registro de leituras RFID
-- [x] Banco de dados com histórico de movimentações
-- [ ] Autenticação e controle de acesso
-- [ ] Painel web de administração
-- [ ] Dashboards de análise de movimentações
-- [ ] Cadastro e gerenciamento de tags, produtos e pontos de leitura
+- [x] Database with tags tracking
+- [ ] API REST for RFID read registers
+- [ ] Web panel and management
+- [ ] Dashboards and movement analysis
+- [ ] Esp32 scripts
+- [ ] Authentication and acess control
 
 ---
 
-## 🏗 Arquitetura do Sistema
+## 🏗 System Architeture
 
-O projeto é um **monorepo** dividido em duas partes principais — backend (em desenvolvimento) e frontend (pendente):
+The project is a **monorepo** divided into two main parts — backend (under development) and frontend (pending):
 
-| Camada | Tecnologia | Status |
+| Layer | Technology | Status |
 |---|---|---|
-| Hardware | ESP32 + Sensor RC522 | ✅ Hardware definido |
-| Backend / API | Python + FastAPI | 🔄 Em desenvolvimento |
-| Banco de Dados | SQLite | 🔄 Em desenvolvimento |
-| Frontend / Painel | A definir | ⏳ Pendente |
+| Hardware | ESP32 + Sensor RC522 | ✅ Hardware defined |
+| Backend / API | Python + FastAPI | 🔄 In development |
+| Banco de Dados | SQLite | 🔄 In Development |
+| Frontend / Painel | To set | ⏳ Pending |
 
 ---
 
-## 🛠 Tecnologias
+## 🛠 Technology
 
-| Componente | Tecnologia |
+| Component | Technology |
 |---|---|
-| Linguagem | Python 3.11+ |
+| Language | Python 3.11+ |
 | Framework API | FastAPI |
-| Banco de Dados | SQLite |
+| Database | SQLite |
 | ORM / Queries | SQLAlchemy / aiosqlite |
-| Validação de dados | Pydantic |
-| Microcontrolador | ESP32 |
-| Sensor RFID | RC522 |
-| Comunicação ESP32 → API | `⚠️ A definir` |
-| Frontend | `⚠️ A definir` |
+| Data validation | Pydantic |
+| Microcontroler | ESP32 |
+| RFID sensor | RC522 |
+| Comunication ESP32 → API | `⚠️ To set` |
+| Frontend | `⚠️ To setr` |
 
-> ⚠️ Campos marcados ainda não foram decididos.
 
 ---
 
-## 📁 Arquitetura de Pastas
+## 📁 Folder structure
 
-> A estrutura abaixo reflete o estado atual do projeto (backend) e a estrutura planejada para o frontend.
+> The structure below reflects the current state of the project (backend) and the planned structure for the frontend.
 
 ```
 nome-do-projeto/
 │
-├── backend/                        # API REST e banco de dados
+├── backend/                        # API REST and database
 │   ├── app/
-│   │   ├── api/                    # Rotas e controllers
+│   │   ├── api/                    # Routes and controllers
 │   │   │   └── v1/
-│   │   │       ├── routes/         # Endpoints organizados por domínio
+│   │   │       ├── routes/         # Endpoints organized by domain
 │   │   │       └── schemas/        # Schemas Pydantic (request/response)
-│   │   ├── core/                   # Configurações centrais
-│   │   │   ├── config.py           # Variáveis de ambiente e settings
-│   │   │   └── database.py         # Conexão com o SQLite
-│   │   ├── models/                 # Modelos do banco de dados (ORM)
-│   │   ├── services/               # Regras de negócio
-│   │   ├── repositories/           # Camada de acesso a dados
-│   │   └── main.py                 # Entry point da aplicação
-│   ├── tests/                      # Testes da API
+│   │   ├── core/                   # Central configurations
+│   │   │   ├── config.py           # Enviroment variables settings
+│   │   │   └── database.py         # Connection to SQLite
+│   │   ├── models/                 # Database models (ORM)
+│   │   ├── services/               # Business rules
+│   │   ├── repositories/           # Data access layer
+│   │   └── main.py                 # Application entry point
+│   ├── tests/                      # API Tests
 │   ├── requirements.txt
-│   └── database.db                 # Arquivo SQLite (não versionado)
 │
-├── frontend/                       # ⏳ Painel web — ainda não iniciado
+├── frontend/                       # ⏳ Web panel
 │
-├── firmware/                       # ⏳ Código do ESP32 (opcional incluir no repo)
+├── firmware/                       # ⏳ Esp32 script
 │
-├── .env.example                    # Exemplo de variáveis de ambiente
+├── .env.example                    
 ├── .gitignore
 └── README.md
 ```
-
-> **Nota:** o arquivo `database.db` deve estar no `.gitignore` — nunca versionar o banco de dados.
-
----
-
-## 🚀 Como Rodar Localmente
-
-### Pré-requisitos
-
-- [Python 3.11+](https://www.python.org/downloads/)
-
-### Instalação
-
-```bash
-# 1. Clone o repositório
-git clone https://github.com/seu-usuario/nome-do-projeto.git
-cd nome-do-projeto/backend
-
-# 2. Crie e ative o ambiente virtual
-python -m venv .venv
-source .venv/bin/activate       # Windows: .venv\Scripts\activate
-
-# 3. Instale as dependências
-pip install -r requirements.txt
-
-# 4. Copie o arquivo de variáveis de ambiente
-cp ../.env.example .env
-
-# 5. Suba a API
-uvicorn app.main:app --reload
-```
-
-A API estará disponível em:
-- **API:** `http://localhost:8000`
-- **Documentação Swagger:** `http://localhost:8000/docs`
-- **Documentação ReDoc:** `http://localhost:8000/redoc`
-
----
-
-## 📡 Endpoints da API
-
-> Base URL: `http://localhost:8000/api/v1`  
-> Documentação interativa completa disponível em `/docs`.
-
-> ⚠️ Os endpoints abaixo refletem o planejamento atual e podem mudar durante o desenvolvimento.
-
-### 📦 Produtos / Materiais
-
-| Método | Endpoint | Descrição | Auth |
-|---|---|---|---|
-| `GET` | `/products` | Lista todos os produtos cadastrados | ✅ |
-| `POST` | `/products` | Cadastra um novo produto | ✅ |
-| `GET` | `/products/{id}` | Retorna um produto específico | ✅ |
-| `PUT` | `/products/{id}` | Atualiza dados de um produto | ✅ |
-| `DELETE` | `/products/{id}` | Remove um produto | ✅ |
-
-### 🏷️ Tags RFID
-
-| Método | Endpoint | Descrição | Auth |
-|---|---|---|---|
-| `GET` | `/tags` | Lista todas as tags cadastradas | ✅ |
-| `POST` | `/tags` | Registra uma nova tag | ✅ |
-| `GET` | `/tags/{uid}` | Retorna dados da tag pelo UID | ✅ |
-| `PUT` | `/tags/{uid}` | Vincula/atualiza tag a um produto | ✅ |
-
-### 📍 Leituras (eventos dos ESP32)
-
-| Método | Endpoint | Descrição | Auth |
-|---|---|---|---|
-| `POST` | `/readings` | Registra uma leitura de tag pelo ESP32 | ✅ |
-| `GET` | `/readings` | Lista o histórico de leituras | ✅ |
-| `GET` | `/readings/{tag_uid}` | Histórico de movimentação de uma tag | ✅ |
-
-### 📊 Movimentações / Dashboard
-
-| Método | Endpoint | Descrição | Auth |
-|---|---|---|---|
-| `GET` | `/movements` | Lista movimentações com filtros (data, setor) | ✅ |
-| `GET` | `/movements/summary` | Resumo agregado para dashboards | ✅ |
-
----
-
-## 🤝 Contribuição e Git Flow
-
-### Branches
-
-| Branch | Propósito |
-|---|---|
-| `main` | Código estável — nunca commitar diretamente |
-| `develop` | Branch de integração |
-| `feature/*` | Novas funcionalidades |
-| `fix/*` | Correção de bugs |
-
-### Fluxo de trabalho
-
-```bash
-# 1. Atualize o develop local
-git checkout develop
-git pull origin develop
-
-# 2. Crie sua branch
-git checkout -b feature/nome-da-feature
-
-# 3. Commit seguindo Conventional Commits
-git commit -m "feat: adiciona endpoint de registro de leitura RFID"
-
-# 4. Envie e abra um Pull Request para develop
-git push origin feature/nome-da-feature
-```
-
-### Padrão de commits
-
-| Prefixo | Quando usar |
-|---|---|
-| `feat:` | Nova funcionalidade |
-| `fix:` | Correção de bug |
-| `docs:` | Documentação |
-| `refactor:` | Refatoração sem nova feature |
-| `test:` | Testes |
-| `chore:` | Build, dependências, CI |
-
-### Versionamento
-
-O projeto segue [Semantic Versioning](https://semver.org/): `MAJOR.MINOR.PATCH`
-
-- `v0.x.x` — fase de desenvolvimento ativo (atual)
-- `v1.0.0` — backend e frontend prontos para produção
-
----
-
-## 🗺 Roadmap
-
-- [x] Estrutura base da API com FastAPI
-- [x] Modelagem do banco de dados SQLite
-- [ ] Endpoints de produtos, tags e leituras
-- [ ] Testes da API
-- [ ] Autenticação
-- [ ] Frontend — painel de administração
-- [ ] Frontend — dashboards de movimentação
-- [ ] Integração e testes com ESP32 físico
-
----
-
-## 📄 Licença
-
-Distribuído sob a licença **MIT**. Veja o arquivo [LICENSE](./LICENSE) para mais detalhes.
-
 ---
 
 <p align="center">

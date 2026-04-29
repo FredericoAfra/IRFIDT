@@ -1,15 +1,18 @@
 <h1 align="center">
-  🚀 Nome do Projeto
+  🏭 IRFIDT
 </h1>
 
 <p align="center">
-  <strong>Uma linha descrevendo o que o projeto faz — ex: Plataforma web para gerenciamento de tarefas em equipe.</strong>
+  <strong>Tracking and management system for materials and products in an industrial environment using RFID tags.</strong>
 </p>
 
 <p align="center">
   <img alt="Python" src="https://img.shields.io/badge/Python-3.11+-3776AB?style=flat&logo=python&logoColor=white"/>
-  <img alt="License" src="https://img.shields.io/badge/license-MIT-green?style=flat"/>
+  <img alt="FastAPI" src="https://img.shields.io/badge/FastAPI-0.100+-009688?style=flat&logo=fastapi&logoColor=white"/>
+  <img alt="SQLite" src="https://img.shields.io/badge/SQLite-003B57?style=flat&logo=sqlite&logoColor=white"/>
+  <img alt="ESP32" src="https://img.shields.io/badge/ESP32-RFID-E7352C?style=flat"/>
   <img alt="Status" src="https://img.shields.io/badge/status-em%20desenvolvimento-yellow?style=flat"/>
+  <img alt="License" src="https://img.shields.io/badge/license-MIT-green?style=flat"/>
 </p>
 
 ---
@@ -17,88 +20,112 @@
 ## 📋 Sumário
 
 - [Sobre o Projeto](#-sobre-o-projeto)
+- [Arquitetura do Sistema](#-arquitetura-do-sistema)
 - [Tecnologias](#-tecnologias)
 - [Arquitetura de Pastas](#-arquitetura-de-pastas)
 - [Como Rodar Localmente](#-como-rodar-localmente)
 - [Endpoints da API](#-endpoints-da-api)
 - [Contribuição e Git Flow](#-contribuição-e-git-flow)
+- [Roadmap](#-roadmap)
 - [Licença](#-licença)
 
 ---
 
 ## 📖 Sobre o Projeto
 
-> ⚠️ _Substitua esta seção com a descrição real do seu projeto._
+A system developed to track and manage the movement of materials and products within an industry. Each item is identified by an **RFID tag**, read by **RC522** sensors connected to **ESP32** microcontrollers installed at strategic points in the factory (entrances, exits, sectors, warehouse, etc.).
 
-**Nome do Projeto** é uma aplicação full stack desenvolvida em Python que permite [descreva o problema que resolve]. 
+When a tag is read, the ESP32 sends the data to a **REST API** (FastAPI), which registers and updates the information in the database. A **web panel** consumes this same API to allow data management and the visualization of dashboards with movement analyses.
 
-O sistema é dividido em duas partes principais:
+### Como funciona na prática
 
-- **Backend:** API RESTful construída com [FastAPI / Django / Flask], responsável pela lógica de negócios, autenticação e comunicação com o banco de dados.
-- **Frontend:** Interface web desenvolvida com [React / Vue / Next.js / Jinja2 templates], consumindo a API e oferecendo a experiência ao usuário final.
+```
+[Tag RFID no produto]
+        │
+        ▼
+[Sensor RC522 + ESP32]  ──→  [API FastAPI]  ──→  [Banco SQLite]
+    (ponto da fábrica)              │
+                                    ▼
+                            [Site de Administração]
+                         (dashboards + gerenciamento)
+```
 
-### ✨ Funcionalidades principais
+### ✨ Funcionalidades previstas
 
-- [ ] Funcionalidade 1 — ex: Autenticação com JWT
-- [ ] Funcionalidade 2 — ex: CRUD de recursos
-- [ ] Funcionalidade 3 — ex: Notificações em tempo real
-- [ ] Funcionalidade 4 — ex: Dashboard com métricas
+- [x] API REST para registro de leituras RFID
+- [x] Banco de dados com histórico de movimentações
+- [ ] Autenticação e controle de acesso
+- [ ] Painel web de administração
+- [ ] Dashboards de análise de movimentações
+- [ ] Cadastro e gerenciamento de tags, produtos e pontos de leitura
+
+---
+
+## 🏗 Arquitetura do Sistema
+
+O projeto é um **monorepo** dividido em duas partes principais — backend (em desenvolvimento) e frontend (pendente):
+
+| Camada | Tecnologia | Status |
+|---|---|---|
+| Hardware | ESP32 + Sensor RC522 | ✅ Hardware definido |
+| Backend / API | Python + FastAPI | 🔄 Em desenvolvimento |
+| Banco de Dados | SQLite | 🔄 Em desenvolvimento |
+| Frontend / Painel | A definir | ⏳ Pendente |
 
 ---
 
 ## 🛠 Tecnologias
 
-| Camada      | Tecnologia                                 |
-|-------------|---------------------------------------------|
-| Backend     | Python 3.11+, FastAPI (ou Django/Flask)    |
-| Banco de Dados | PostgreSQL / SQLite (dev)               |
-| ORM         | SQLAlchemy / Django ORM                    |
-| Frontend    | React / Vue / Jinja2 Templates             |
-| Autenticação| JWT / OAuth2                               |
-| Testes      | Pytest                                     |
-| Containers  | Docker + Docker Compose                    |
+| Componente | Tecnologia |
+|---|---|
+| Linguagem | Python 3.11+ |
+| Framework API | FastAPI |
+| Banco de Dados | SQLite |
+| ORM / Queries | SQLAlchemy / aiosqlite |
+| Validação de dados | Pydantic |
+| Microcontrolador | ESP32 |
+| Sensor RFID | RC522 |
+| Comunicação ESP32 → API | `⚠️ A definir` |
+| Frontend | `⚠️ A definir` |
+
+> ⚠️ Campos marcados ainda não foram decididos.
 
 ---
 
 ## 📁 Arquitetura de Pastas
 
+> A estrutura abaixo reflete o estado atual do projeto (backend) e a estrutura planejada para o frontend.
+
 ```
 nome-do-projeto/
 │
-├── backend/                    # Código do servidor / API
+├── backend/                        # API REST e banco de dados
 │   ├── app/
-│   │   ├── api/                # Rotas e controllers
-│   │   │   ├── v1/
-│   │   │   │   ├── routes/     # Definição dos endpoints
-│   │   │   │   └── schemas/    # Schemas Pydantic / serializers
-│   │   ├── core/               # Configurações centrais
-│   │   │   ├── config.py       # Variáveis de ambiente e settings
-│   │   │   ├── security.py     # Lógica de autenticação/JWT
-│   │   │   └── database.py     # Conexão com o banco de dados
-│   │   ├── models/             # Modelos do banco de dados (ORM)
-│   │   ├── services/           # Regras de negócio
-│   │   ├── repositories/       # Camada de acesso a dados
-│   │   └── main.py             # Entry point da aplicação
-│   ├── tests/                  # Testes unitários e de integração
+│   │   ├── api/                    # Rotas e controllers
+│   │   │   └── v1/
+│   │   │       ├── routes/         # Endpoints organizados por domínio
+│   │   │       └── schemas/        # Schemas Pydantic (request/response)
+│   │   ├── core/                   # Configurações centrais
+│   │   │   ├── config.py           # Variáveis de ambiente e settings
+│   │   │   └── database.py         # Conexão com o SQLite
+│   │   ├── models/                 # Modelos do banco de dados (ORM)
+│   │   ├── services/               # Regras de negócio
+│   │   ├── repositories/           # Camada de acesso a dados
+│   │   └── main.py                 # Entry point da aplicação
+│   ├── tests/                      # Testes da API
 │   ├── requirements.txt
-│   └── Dockerfile
+│   └── database.db                 # Arquivo SQLite (não versionado)
 │
-├── frontend/                   # Código da interface web
-│   ├── public/                 # Arquivos estáticos públicos
-│   ├── src/
-│   │   ├── components/         # Componentes reutilizáveis
-│   │   ├── pages/              # Páginas / views
-│   │   ├── services/           # Chamadas à API
-│   │   ├── store/              # Gerenciamento de estado
-│   │   └── styles/             # Estilos globais
-│   ├── package.json
-│   └── Dockerfile
+├── frontend/                       # ⏳ Painel web — ainda não iniciado
 │
-├── docker-compose.yml          # Orquestração dos serviços
-├── .env.example                # Exemplo de variáveis de ambiente
+├── firmware/                       # ⏳ Código do ESP32 (opcional incluir no repo)
+│
+├── .env.example                    # Exemplo de variáveis de ambiente
 ├── .gitignore
 └── README.md
 ```
+
+> **Nota:** o arquivo `database.db` deve estar no `.gitignore` — nunca versionar o banco de dados.
 
 ---
 
@@ -107,160 +134,136 @@ nome-do-projeto/
 ### Pré-requisitos
 
 - [Python 3.11+](https://www.python.org/downloads/)
-- [Docker e Docker Compose](https://docs.docker.com/get-docker/) _(recomendado)_
-- [Node.js 18+](https://nodejs.org/) _(caso rode o frontend separadamente)_
 
-### ▶️ Com Docker (recomendado)
+### Instalação
 
 ```bash
 # 1. Clone o repositório
 git clone https://github.com/seu-usuario/nome-do-projeto.git
-cd nome-do-projeto
+cd nome-do-projeto/backend
 
-# 2. Copie e configure as variáveis de ambiente
-cp .env.example .env
-# Edite o arquivo .env com suas configurações
-
-# 3. Suba todos os serviços
-docker-compose up --build
-```
-
-A aplicação estará disponível em:
-- **Frontend:** `http://localhost:3000`
-- **Backend / API:** `http://localhost:8000`
-- **Docs interativos (Swagger):** `http://localhost:8000/docs`
-
-### ▶️ Sem Docker (manual)
-
-```bash
-# --- Backend ---
-cd backend
+# 2. Crie e ative o ambiente virtual
 python -m venv .venv
 source .venv/bin/activate       # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-uvicorn app.main:app --reload   # ou: python manage.py runserver
 
-# --- Frontend (em outro terminal) ---
-cd frontend
-npm install
-npm run dev
+# 3. Instale as dependências
+pip install -r requirements.txt
+
+# 4. Copie o arquivo de variáveis de ambiente
+cp ../.env.example .env
+
+# 5. Suba a API
+uvicorn app.main:app --reload
 ```
+
+A API estará disponível em:
+- **API:** `http://localhost:8000`
+- **Documentação Swagger:** `http://localhost:8000/docs`
+- **Documentação ReDoc:** `http://localhost:8000/redoc`
 
 ---
 
 ## 📡 Endpoints da API
 
 > Base URL: `http://localhost:8000/api/v1`  
-> Documentação interativa completa disponível em `/docs` (Swagger UI) e `/redoc`.
+> Documentação interativa completa disponível em `/docs`.
 
-### 🔐 Autenticação
+> ⚠️ Os endpoints abaixo refletem o planejamento atual e podem mudar durante o desenvolvimento.
 
-| Método | Endpoint           | Descrição                        | Auth |
-|--------|--------------------|----------------------------------|------|
-| `POST` | `/auth/register`   | Cria um novo usuário             | ❌   |
-| `POST` | `/auth/login`      | Autentica e retorna token JWT    | ❌   |
-| `POST` | `/auth/refresh`    | Renova o access token            | ✅   |
-| `POST` | `/auth/logout`     | Invalida o token atual           | ✅   |
+### 📦 Produtos / Materiais
 
-### 👤 Usuários
+| Método | Endpoint | Descrição | Auth |
+|---|---|---|---|
+| `GET` | `/products` | Lista todos os produtos cadastrados | ✅ |
+| `POST` | `/products` | Cadastra um novo produto | ✅ |
+| `GET` | `/products/{id}` | Retorna um produto específico | ✅ |
+| `PUT` | `/products/{id}` | Atualiza dados de um produto | ✅ |
+| `DELETE` | `/products/{id}` | Remove um produto | ✅ |
 
-| Método   | Endpoint         | Descrição                         | Auth |
-|----------|------------------|-----------------------------------|------|
-| `GET`    | `/users/me`      | Retorna perfil do usuário logado  | ✅   |
-| `PUT`    | `/users/me`      | Atualiza dados do perfil          | ✅   |
-| `DELETE` | `/users/me`      | Remove a conta do usuário         | ✅   |
+### 🏷️ Tags RFID
 
-### 📦 [Recurso Principal — ex: Tarefas]
+| Método | Endpoint | Descrição | Auth |
+|---|---|---|---|
+| `GET` | `/tags` | Lista todas as tags cadastradas | ✅ |
+| `POST` | `/tags` | Registra uma nova tag | ✅ |
+| `GET` | `/tags/{uid}` | Retorna dados da tag pelo UID | ✅ |
+| `PUT` | `/tags/{uid}` | Vincula/atualiza tag a um produto | ✅ |
 
-| Método   | Endpoint            | Descrição                         | Auth |
-|----------|---------------------|-----------------------------------|------|
-| `GET`    | `/items`            | Lista todos os itens              | ✅   |
-| `POST`   | `/items`            | Cria um novo item                 | ✅   |
-| `GET`    | `/items/{id}`       | Retorna um item específico        | ✅   |
-| `PUT`    | `/items/{id}`       | Atualiza um item                  | ✅   |
-| `DELETE` | `/items/{id}`       | Remove um item                    | ✅   |
+### 📍 Leituras (eventos dos ESP32)
 
-<details>
-<summary>📄 Exemplo de Request / Response</summary>
+| Método | Endpoint | Descrição | Auth |
+|---|---|---|---|
+| `POST` | `/readings` | Registra uma leitura de tag pelo ESP32 | ✅ |
+| `GET` | `/readings` | Lista o histórico de leituras | ✅ |
+| `GET` | `/readings/{tag_uid}` | Histórico de movimentação de uma tag | ✅ |
 
-**POST** `/auth/login`
+### 📊 Movimentações / Dashboard
 
-```json
-// Request Body
-{
-  "email": "usuario@email.com",
-  "password": "senha123"
-}
-
-// Response 200 OK
-{
-  "access_token": "eyJhbGciOiJIUzI1NiIs...",
-  "token_type": "bearer",
-  "expires_in": 3600
-}
-```
-
-</details>
+| Método | Endpoint | Descrição | Auth |
+|---|---|---|---|
+| `GET` | `/movements` | Lista movimentações com filtros (data, setor) | ✅ |
+| `GET` | `/movements/summary` | Resumo agregado para dashboards | ✅ |
 
 ---
 
 ## 🤝 Contribuição e Git Flow
 
-Agradecemos contribuições! Siga as etapas abaixo para manter o histórico do projeto organizado.
-
 ### Branches
 
-| Branch      | Propósito                                              |
-|-------------|--------------------------------------------------------|
-| `main`      | Código em produção — **nunca commitar diretamente**    |
-| `develop`   | Branch de integração — base para novas features        |
-| `feature/*` | Desenvolvimento de novas funcionalidades               |
-| `fix/*`     | Correção de bugs                                       |
-| `hotfix/*`  | Correções urgentes em produção                         |
-| `release/*` | Preparação de uma nova versão                          |
+| Branch | Propósito |
+|---|---|
+| `main` | Código estável — nunca commitar diretamente |
+| `develop` | Branch de integração |
+| `feature/*` | Novas funcionalidades |
+| `fix/*` | Correção de bugs |
 
 ### Fluxo de trabalho
 
 ```bash
-# 1. Atualize sua branch develop local
+# 1. Atualize o develop local
 git checkout develop
 git pull origin develop
 
-# 2. Crie uma branch para sua feature ou fix
+# 2. Crie sua branch
 git checkout -b feature/nome-da-feature
-# ou
-git checkout -b fix/descricao-do-bug
 
-# 3. Faça seus commits seguindo o padrão Conventional Commits
-git commit -m "feat: adiciona endpoint de listagem de tarefas"
-git commit -m "fix: corrige validação de email no registro"
+# 3. Commit seguindo Conventional Commits
+git commit -m "feat: adiciona endpoint de registro de leitura RFID"
 
-# 4. Envie a branch para o remoto
+# 4. Envie e abra um Pull Request para develop
 git push origin feature/nome-da-feature
-
-# 5. Abra um Pull Request para a branch develop
 ```
 
-### Padrão de commits (Conventional Commits)
+### Padrão de commits
 
-| Prefixo    | Quando usar                                    |
-|------------|------------------------------------------------|
-| `feat:`    | Nova funcionalidade                            |
-| `fix:`     | Correção de bug                                |
-| `docs:`    | Alterações na documentação                     |
-| `style:`   | Formatação, sem mudança de lógica              |
-| `refactor:`| Refatoração sem nova feature nem correção      |
-| `test:`    | Adição ou correção de testes                   |
-| `chore:`   | Tarefas de build, CI, dependências             |
+| Prefixo | Quando usar |
+|---|---|
+| `feat:` | Nova funcionalidade |
+| `fix:` | Correção de bug |
+| `docs:` | Documentação |
+| `refactor:` | Refatoração sem nova feature |
+| `test:` | Testes |
+| `chore:` | Build, dependências, CI |
 
-### Rodando os testes antes de abrir o PR
+### Versionamento
 
-```bash
-cd backend
-pytest --cov=app tests/
-```
+O projeto segue [Semantic Versioning](https://semver.org/): `MAJOR.MINOR.PATCH`
 
-> Pull Requests sem testes para novas funcionalidades podem ser recusados.
+- `v0.x.x` — fase de desenvolvimento ativo (atual)
+- `v1.0.0` — backend e frontend prontos para produção
+
+---
+
+## 🗺 Roadmap
+
+- [x] Estrutura base da API com FastAPI
+- [x] Modelagem do banco de dados SQLite
+- [ ] Endpoints de produtos, tags e leituras
+- [ ] Testes da API
+- [ ] Autenticação
+- [ ] Frontend — painel de administração
+- [ ] Frontend — dashboards de movimentação
+- [ ] Integração e testes com ESP32 físico
 
 ---
 
@@ -271,5 +274,5 @@ Distribuído sob a licença **MIT**. Veja o arquivo [LICENSE](./LICENSE) para ma
 ---
 
 <p align="center">
-  Feito com ❤️ por <a href="https://github.com/seu-usuario">@seu-usuario</a>
+  Feito por <a href="https://github.com/seu-usuario">FredericoAfra</a>
 </p>

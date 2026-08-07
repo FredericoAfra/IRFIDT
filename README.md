@@ -27,7 +27,6 @@ A read-only, build-free dashboard using HTML, Tailwind CSS, Alpine.js, and Fireb
 
 ## Demo Limitations
 * Single checkpoint simulated (prototype scale).
-* Firebase Auth token expires in 1 hour (requires ESP32 reboot).
 * Unregistered tags default to the "dispatch" location.
 
 ## License

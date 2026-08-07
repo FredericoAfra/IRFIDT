@@ -10,15 +10,16 @@ An academic IoT prototype to monitor industrial asset movement in specifc points
 ## Hardware Components
 * **ESP32:** Main controller. Reads RFID, connects to Wi-Fi/Firebase, and sends actuator commands.
 * **RC522:** 13.56 MHz RFID reader module.
-* **Arduino Uno:** Controls the physical actuator (e.g., a servo motor for conveyor switching).
 * **RFID Tags:** Passive tags representing trackable assets.
 
 ## Firmware & Database
 * **ESP32 Firmware (C++):** Authenticates via Firebase Auth, reads the tag UID, logs the reading with a Firebase server timestamp (generating a unique push ID), updates the asset's current location, and triggers the Arduino.
 * **Firebase Realtime Database:**
-  * `/rfid/ultima_tag`: Quick reference for the last read tag.
+  * `/rfid/last_tag`: Quick reference for the last read tag.
   * `/tags/{uid}`: Asset details (name, category, destination, current location).
-  * `/leituras/{push_key}`: Historical log of all checkpoint readings.
+  * `/scans/{push_key}`: Historical log of all checkpoint readings.
+  * `/points/'referenced_points'`: All the checkpoints, and the referenced location.
+  * `/config/initial_inventory`: The inventory in the start of the day 
 * **Security:** ESP32 writing is authenticated; Firebase Security Rules reject invalid checkpoint locations.
 
 ## Web Frontend (Planned)
